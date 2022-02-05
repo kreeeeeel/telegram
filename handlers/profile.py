@@ -13,7 +13,8 @@ config.close()
 async def profile_handler(message: types.Message):
     try:
         if not GetDataFromUser.is_user_data(message.from_user.id):
-            GetDataFromUser.create_user_data(message.from_user.id)
+            return
+            #GetDataFromUser.create_user_data(message.from_user.id)
 
         data_user = GetDataFromUser.get_data_user(message.from_user.id)
 
