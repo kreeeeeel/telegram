@@ -1,0 +1,5 @@
+requests
+vkbottle
+beautifulsoup4
+lxml
+threading
