@@ -9,8 +9,8 @@ data = json.loads(config.read())
 config.close()
 
 # Logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 # Dispatcher
-bot = Bot(token=data["token"], parse_mode="Markdown")
+bot = Bot(token=data["token"], parse_mode="MarkdownV2")
 dp = Dispatcher(bot)
