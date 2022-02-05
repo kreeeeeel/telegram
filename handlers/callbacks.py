@@ -25,7 +25,7 @@ async def some_callback_handler(callback_query: types.CallbackQuery):
             caption += "\n*📌 Остальные команды:*\n"
             caption += "_/profile - Личная статистика_\n"
             caption += "_/referal - Реферальная система_"
-            caption += "_/startgame - Досрочный запуск игры_\n"
+            caption += "_/startgame - Запуск игры_\n"
             caption += "_/mute - Заглушить_\n"
             caption += "_/kick - Кикнуть_\n"
 
