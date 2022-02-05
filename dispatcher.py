@@ -12,5 +12,5 @@ config.close()
 logging.basicConfig(level=logging.INFO)
 
 # Dispatcher
-bot = Bot(token=data["token"], parse_mode="MarkdownV2")
+bot = Bot(token=data["token"], parse_mode="Markdown")
 dp = Dispatcher(bot)
