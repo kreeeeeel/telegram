@@ -23,10 +23,11 @@ async def some_callback_handler(callback_query: types.CallbackQuery):
             caption += "_/double - Игра Дабл_\n"
             caption += "_/mafia - Игра Мафия_\n"
             caption += "\n*📌 Остальные команды:*\n"
+            caption += "_/profile - Личная статистика_\n"
+            caption += "_/referal - Реферальная система_"
+            caption += "_/startgame - Досрочный запуск игры_\n"
             caption += "_/mute - Заглушить_\n"
             caption += "_/kick - Кикнуть_\n"
-            caption += "_/startgame - Досрочный запуск игры_\n"
-            caption += "_/referal - Реферальная система_"
 
             return await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, text=caption)
 
