@@ -124,10 +124,12 @@ async def setadmin_handler(message: types.Message):
             return
 
         if not GetDataFromUser.is_user_data(user_id=message.reply_to_message.from_user.id):
-            GetDataFromUser.create_user_data(user_id=message.reply_to_message.from_user.id, referal=message.from_user.id)   
+            GetDataFromUser.create_user_data(user_id=message.reply_to_message.from_user.id)   
 
         data_user = GetDataFromUser.get_data_user(user_id=message.reply_to_message.from_user.id)
         data_user["player_admin"] = True
         GetDataFromUser.set_data_user(user_id=message.reply_to_message.from_user.id, data=data_user)
+        await message.reply(data["emojio"] + f" Права доступа [{message.reply_to_message.from_user.full_name}](tg://user?id={message.reply_to_message.from_user.id}) выданы.")
+
     except Exception as e:
         print(repr(e))
