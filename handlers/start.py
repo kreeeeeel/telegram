@@ -7,6 +7,12 @@ from . import mafia
 from . import blackjack
 from classes import GetDataFromChat, GetDataFromUser
 
+import datetime
+from datetime import datetime
+import pytz
+
+tz = pytz.timezone('Europe/Moscow')
+
 config = open(os.getcwd() + "/config.json", encoding="UTF-8")
 data = json.loads(config.read())
 config.close()
@@ -22,8 +28,20 @@ async def start_handler(message: types.Message):
                 value = int(value)
                 if GetDataFromUser.is_user_data(user_id=value):
 
-                    if GetDataFromUser.is_user_data(user_id=message.from_user.id):
-                        return await message.reply(text=data["emojio"] + " Невозможно присоединиться по реферальной ссылке\nТак как вы уже зарегистрированы..")
+                    register = GetDataFromUser.is_user_data(user_id=message.from_user.id)
+                    if register:
+                        info = GetDataFromUser.get_data_user(user_id=message.from_user.id)
+                        if info["player_invited"] is not None:
+                            return await message.reply(text=data["emojio"] + " Вы уже переходили по реферальной ссылке..")
+
+                        register_date = datetime.datetime(day=info["player_register_day"], month=info["player_register_month"], year=info["player_register_year"],
+                        hour=info["player_register_hour"], minute=info["player_register_minute"])
+
+                        date_now = datetime.now(tz)
+                        delta = date_now - register_date
+
+                        if delta.total_seconds() / 60 > 24:
+                            return await message.reply(text=data["emojio"] + " Невозможно присоединиться по реферальной ссылке\nТак как вы уже зарегистрированы..")
 
                     user = GetDataFromUser.get_data_user(user_id=value)
                     appened = [{"user": message.from_user.id}]
@@ -53,7 +71,12 @@ async def start_handler(message: types.Message):
 
                     await bot.send_message(chat_id=value, text=caption, parse_mode="Markdown")
 
-                    return GetDataFromUser.create_user_data(user_id=message.from_user.id, referal=value, Money=data["bonus_referal"] * user["player_referal_lvl"])
+                    if not register:
+                        return GetDataFromUser.create_user_data(user_id=message.from_user.id, referal=value, Money=data["bonus_referal"] * user["player_referal_lvl"])
+
+                    info["player_invited"] = message.from_user.id
+                    info["player_balance"] += data["bonus_referal"] * user["player_referal_lvl"]
+                    return GetDataFromUser.set_data_user(user_id=message.from_user.id, data=info)
                     
                 if not GetDataFromChat.is_created_chat(value):
                     return

@@ -26,8 +26,6 @@ async def some_callback_handler(callback_query: types.CallbackQuery):
             caption += "_/profile - Личная статистика_\n"
             caption += "_/referal - Реферальная система_\n"
             caption += "_/startgame - Запуск игры_\n"
-            caption += "_/mute - Заглушить_\n"
-            caption += "_/kick - Кикнуть_\n"
 
             return await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, text=caption)
 
@@ -64,7 +62,7 @@ async def some_callback_handler(callback_query: types.CallbackQuery):
             if callback_query.from_user.id != callback_query.message.reply_to_message.from_user.id:
                 return await bot.answer_callback_query(callback_query_id=callback_query.id, text=data["emojio"] + " Кнопка предназначана не для вас..", show_alert=True)
 
-            caption, keyboard = referal.get_message_referal()
+            caption, keyboard = referal.get_message_referal(callback_query.from_user.id)
 
             return await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, text=caption, reply_markup=keyboard)
 

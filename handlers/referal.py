@@ -4,7 +4,7 @@ import os
 from aiogram import types
 from dispatcher import dp, bot
 
-from classes import GetDataFromChat, GetDataFromUser
+from classes import GetDataFromUser
 
 config = open(os.getcwd() + "/config.json", encoding="UTF-8")
 data = json.loads(config.read())
@@ -44,14 +44,16 @@ async def referal_handler(message: types.Message):
                 GetDataFromUser.set_data_user(user_id=message.from_user.id, data=user)
                 return await message.reply(text=data["emojio"] + f' Вы сняли со счёта *{money} $*\n💸 Ваш баланс: *{user["player_balance"]} $*')
 
-        caption, keyboard = get_message_referal()
+        caption, keyboard = get_message_referal(message.from_user.id)
 
         await message.reply(text=caption, reply_markup=keyboard, parse_mode="Markdown")
     except Exception as e:
         print(repr(e))
 
-def get_message_referal():
-    caption = data["emojio"] + " *Реферальная система*\n\n"
+def get_message_referal(user):
+    data_user = GetDataFromUser.get_data_user(user_id=user)
+
+    caption = data["emojio"] + f' *Реферальная система*\nУровень: {data_user["player_referal_lvl"]}/{data["maximum_level_referal"]}\n\n'
     caption += f'❓ Что такое Реферальная система\n❗ Реферальная система служит помощи игрокам\n  При приглашение своего друга по ссылке\n  Вы будете получать процент от ставок своего друга\n\n'
     caption += f'❓ Как пригласить своего друга?\n❗ Пригласить своего друга можно по ссылке\n  После чего ваш друг перейдя по ссылке\n  Нажать на кнопку *CТАРТ*\n\n'
     caption += f'❓ Бонусы\n❗ При приглашении вашего друга, он сможет получить бонус\n  В зависимости от уровня вашей реферальной системы\n\n'

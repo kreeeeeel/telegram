@@ -12,10 +12,11 @@ config.close()
 @dp.message_handler(commands=['profile'])
 async def profile_handler(message: types.Message):
     try:
-        if message.chat.id == message.from_user.id:
+        value = GetDataFromUser.is_user_data(message.from_user.id)
+        if message.chat.id == message.from_user.id and not value:
             GetDataFromUser.create_user_data(message.from_user.id)
 
-        if message.chat.id != message.from_user.id and not GetDataFromUser.is_user_data(message.from_user.id):
+        if message.chat.id != message.from_user.id and not value:
             return
 
         data_user = GetDataFromUser.get_data_user(message.from_user.id)

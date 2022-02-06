@@ -8,3 +8,4 @@ from . import double
 from . import associations
 from . import messages
 from . import referal
+from . import transfer

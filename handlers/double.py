@@ -37,10 +37,10 @@ async def double_handler(message: types.Message):
         if factor > 0 and factor <= 10:
             multiplier = "x5"
 
-        if factor > 10 and factor <= 40:
+        if factor > 10 and factor <= 50:
             multiplier = "x3"
 
-        if factor > 40 and factor <= 99:
+        if factor > 50 and factor <= 99:
             multiplier = "x2"
 
         chat["action"] = "Double"
@@ -66,6 +66,12 @@ async def bet_handler(message: types.Message):
         if chat["action"] != "Double" or chat["type"] == "No-bet":
             return
 
+        if not GetDataFromUser.is_user_data(message.from_user.id):
+            #GetDataFromUser.create_user_data(message.from_user.id)
+            return
+
+        data_user = GetDataFromUser.get_data_user(message.from_user.id)
+
         splited = message.get_args()
         splited = splited.split(" ")
         # 1 - position
@@ -76,19 +82,18 @@ async def bet_handler(message: types.Message):
         if splited[0].lower() != "x2" and splited[0].lower() != "x3" and splited[0].lower() != "x5" and splited[0].lower() != "x50":
             return await message.reply(data["emojio"] + " *Дабл\nИспользуйте: /bet [позиция] [сумма]*")
 
-        if not splited[1].isdigit():
+        if not splited[1].isdigit() and splited[1].lower() != "всё" and splited[1].lower() != "все" and splited[1].lower() != "all":
             return await message.reply(data["emojio"] + " *Дабл\nИспользуйте: /bet [позиция] [сумма]*")
 
         position = splited[0].lower()
-        bet = int(splited[1])
+        if splited[1].isdigit():
+            bet = int(splited[1])
+        else:
+            bet = data_user["player_balance"]
 
         if bet < data["minimal_bet_double"]:
             return await message.reply(f'💰 Минимальная ставка в Дабл *{data["minimal_bet_double"]}$*')
 
-        if not GetDataFromUser.is_user_data(message.from_user.id):
-            GetDataFromUser.create_user_data(message.from_user.id)
-
-        data_user = GetDataFromUser.get_data_user(message.from_user.id)
         if data_user["player_balance"] < bet:
             return await message.reply(text="💰 У вас недостаточно средств..")
 
@@ -142,127 +147,45 @@ async def end_double(chat_id):
     try:
         chat = GetDataFromChat.export_data_from_chat(chat=chat_id)
 
-        message_x2 = ""
-        message_x3 = ""
-        message_x5 = ""
-        message_x50 = ""
+        positons = [2, 3, 5, 50]
 
         count_player = 0
         count_win = 0
         ammount_money = 0
 
-        x2 = os.listdir(os.getcwd() + "/data/chats/" + str(chat_id) + "/double/x2")
-        for temp in x2:
-            with open(os.getcwd() + "/data/chats/" + str(chat_id) + "/double/x2/" + temp, encoding="UTF-8") as file:
-                user = json.loads(file.read())
-
-            os.remove(os.getcwd() + "/data/chats/" + str(chat_id) + "/double/x2/" + temp)
-
-            user_id = int(temp.replace(".json", ""))
-            pin_user = f'[{user["name"]}](tg://user?id={user_id})'
-            ammount_money += user["bet"]
-
-            if chat["value"] == "x2":
-                message_x2 += "✅ "
-                data_user = GetDataFromUser.get_data_user(user_id)
-                data_user["player_balance"] += user["bet"] * 2
-                GetDataFromUser.set_data_user(user_id, data_user)
-                GetDataFromUser.give_referal_money(user_id=data_user["player_invited"], ammount=user["bet"] * 2)
-                count_win += 1
-
-            else:
-                message_x2 += "❌ "
-
-            message_x2 += f'{( user["name"] , pin_user )[ chat["pin_user"] ]} - {user["bet"]} $\n'
-            count_player += 1
-
-        x3 = os.listdir(os.getcwd() + "/data/chats/" + str(chat_id) + "/double/x3")
-        for temp in x3:
-            with open(os.getcwd() + "/data/chats/" + str(chat_id) + "/double/x3/" + temp, encoding="UTF-8") as file:
-                user = json.loads(file.read())
-
-            os.remove(os.getcwd() + "/data/chats/" + str(chat_id) + "/double/x3/" + temp)
-
-            user_id = int(temp.replace(".json", ""))
-            pin_user = f'[{user["name"]}](tg://user?id={user_id})'
-            ammount_money += user["bet"]
-
-            if chat["value"] == "x3":
-                message_x3 += "✅ "
-                data_user = GetDataFromUser.get_data_user(user_id)
-                data_user["player_balance"] += user["bet"] * 3
-                GetDataFromUser.set_data_user(user_id, data_user)
-                GetDataFromUser.give_referal_money(user_id=data_user["player_invited"], ammount=user["bet"] * 3)
-                count_win += 1
-            else:
-                message_x3 += "❌ "
-
-            message_x3 += f'{( user["name"] , pin_user )[ chat["pin_user"] ]} - {user["bet"]} $\n'
-            count_player += 1
-
-        x5 = os.listdir(os.getcwd() + "/data/chats/" + str(chat_id) + "/double/x5")
-        for temp in x5:
-            with open(os.getcwd() + "/data/chats/" + str(chat_id) + "/double/x5/" + temp, encoding="UTF-8") as file:
-                user = json.loads(file.read())
-
-            os.remove(os.getcwd() + "/data/chats/" + str(chat_id) + "/double/x5/" + temp)
-
-            user_id = int(temp.replace(".json", ""))
-            pin_user = f'[{user["name"]}](tg://user?id={user_id})'
-            ammount_money += user["bet"]
-
-            if chat["value"] == "x5":
-                message_x5 += "✅ "
-                data_user = GetDataFromUser.get_data_user(user_id)
-                data_user["player_balance"] += user["bet"] * 5
-                GetDataFromUser.set_data_user(user_id, data_user)
-                GetDataFromUser.give_referal_money(user_id=data_user["player_invited"], ammount=user["bet"] * 5)
-                count_win += 1
-            else:
-                message_x5 += "❌ "
-
-            message_x5 += f'{( user["name"] , pin_user )[ chat["pin_user"] ]} - {user["bet"]} $\n'
-            count_player += 1
-
-        x50 = os.listdir(os.getcwd() + "/data/chats/" + str(chat_id) + "/double/x50")
-        for temp in x50:
-            with open(os.getcwd() + "/data/chats/" + str(chat_id) + "/double/x50/" + temp, encoding="UTF-8") as file:
-                user = json.loads(file.read())
-
-            os.remove(os.getcwd() + "/data/chats/" + str(chat_id) + "/double/x50/" + temp)
-
-            user_id = int(temp.replace(".json", ""))
-            pin_user = f'[{user["name"]}](tg://user?id={user_id})'
-            ammount_money += user["bet"]
-
-            if chat["value"] == "x50":
-                message_x50 += "✅ "
-                data_user = GetDataFromUser.get_data_user(user_id)
-                data_user["player_balance"] += user["bet"] * 50
-                GetDataFromUser.set_data_user(user_id, data_user)
-                GetDataFromUser.give_referal_money(user_id=data_user["player_invited"], ammount=user["bet"] * 50)
-                count_win += 1
-            else:
-                message_x50 += "❌ "
-
-            message_x50 += f'{( user["name"] , pin_user )[ chat["pin_user"] ]} - {user["bet"]} $\n'
-            count_player += 1
-
         message = data["emojio"] + f' *Дабл\nПодсчёт окончен\nОбщий банк: {ammount_money} $*\n'
-        if message_x2 != "":
-            message += "\n*Ставки X2:*\n" + message_x2
 
-        if message_x3 != "":
-            message += "\n*Ставки X3:*\n" + message_x3
+        for item in positons:
+            dirs = os.listdir(os.getcwd() + "/data/chats/" + str(chat_id) + "/double/x" + str(item))
+            for temp in dirs:
+                with open(os.getcwd() + "/data/chats/" + str(chat_id) + "/double/x" + str(item) + "/" + temp, encoding="UTF-8") as file:
+                    user = json.loads(file.read())
 
-        if message_x5 != "":
-            message += "\n*Ставки X5:*\n" + message_x5
+                os.remove(os.getcwd() + "/data/chats/" + str(chat_id) + "/double/x" + str(item) + "/" + temp)
 
-        if message_x50 != "":
-            message += "\n*Ставки X50:*\n" + message_x50
+                user_id = int(temp.replace(".json", ""))
+                pin_user = f'[{user["name"]}](tg://user?id={user_id})'
+                ammount_money += user["bet"]
+
+                if chat["value"] == "x" + str(item):
+                    message += "✅ "
+
+                    data_user = GetDataFromUser.get_data_user(user_id)
+                    data_user["player_balance"] += user["bet"] * item
+
+                    GetDataFromUser.set_data_user(user_id, data_user)
+                    GetDataFromUser.give_referal_money(user_id=data_user["player_invited"], ammount=user["bet"] * item)
+                    count_win += 1
+
+                else:
+                    message += "❌ "
+
+                message += f'{( user["name"] , pin_user )[ chat["pin_user"] ]} - {user["bet"]} $ - X{item}\n'
 
         message += f'\n_Кол-во ставок: {count_player}\nВыигрышных: {count_win}_'
+
         GetDataFromChat.remove_game_from_chat(chat_id)
+
         image = open(os.getcwd() + "/games/" + chat["value"] + ".jpg", "rb")
         return await bot.send_photo(chat_id=chat_id, caption=message, photo=image)
 
