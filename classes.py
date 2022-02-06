@@ -130,11 +130,11 @@ class GetDataFromUser:
             json.dump(data, file, ensure_ascii=False, indent=4)
 
     def give_referal_money(user_id, ammount):
+        if not GetDataFromUser.is_user_data(user_id=user_id):
+            return
+
         with open("data/users/" + str(user_id) + ".json", encoding="UTF-8") as file:
             data = json.loads(file.read())
-
-        if not GetDataFromUser.is_user_data(user_id=data["player_invited"]):
-            return
         
         value = int(ammount * data["player_referal_lvl"] / 100)
         data["player_referal_balance"] += value
