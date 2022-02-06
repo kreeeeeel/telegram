@@ -55,6 +55,9 @@ async def transfer_handler(message: types.Message):
                 transfer_telegram_id = int(temp.replace("json", ""))
                 break
 
+        if not transfer_telegram_id:
+            return await message.reply(data["emojio"] + " Пользователь с данным *ID* не найден")
+
         data_user["player_balance"] -= transfer_money
         user["player_balance"] += transfer_money
         GetDataFromUser.set_data_user(user_id=transfer_telegram_id, data=user)
