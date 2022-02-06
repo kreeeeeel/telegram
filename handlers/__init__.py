@@ -3,7 +3,6 @@ from . import start
 from . import admin
 from . import callbacks
 from . import startgame
-#from . import profile
 from . import double
 from . import associations
 from . import messages
