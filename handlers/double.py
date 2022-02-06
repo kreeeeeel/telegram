@@ -1,5 +1,5 @@
 import asyncio
-from calendar import c
+import logging
 import os
 import json
 import random
@@ -51,7 +51,7 @@ async def double_handler(message: types.Message):
         await message.answer(text=data["emojio"] + " *Дабл\nПринимаем ставки*\n\n_Для участия, делайте свои ставки\nПозиции: X2, X3, X5, X50_\n\n*Ставка: /bet [позиция] [сумма]*")
         await countdown_double(message.chat.id)
     except Exception as e:
-        print(repr(e))
+        logging.exception("message")
 
 @dp.message_handler(commands=['bet'])
 async def bet_handler(message: types.Message):
@@ -107,7 +107,7 @@ async def bet_handler(message: types.Message):
         return await message.reply(data["emojio"] + " *Дабл\nВаша ставка была принята.*")
 
     except Exception as e:
-        print(repr(e))
+        logging.exception("message")
 
 async def countdown_double(chat_id, forcibly=False):
     try:
@@ -136,7 +136,7 @@ async def countdown_double(chat_id, forcibly=False):
             await asyncio.sleep(5)
             return await countdown_double(chat_id, forcibly)
     except Exception as e:
-        print(repr(e))
+        logging.exception("message")
 
 async def end_double(chat_id):
     try:
@@ -267,4 +267,4 @@ async def end_double(chat_id):
         return await bot.send_photo(chat_id=chat_id, caption=message, photo=image)
 
     except Exception as e:
-        print(repr(e))
+        logging.exception("message")
