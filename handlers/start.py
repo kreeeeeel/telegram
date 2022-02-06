@@ -7,7 +7,6 @@ from . import mafia
 from . import blackjack
 from classes import GetDataFromChat, GetDataFromUser
 
-import datetime
 from datetime import datetime
 import pytz
 
@@ -34,7 +33,7 @@ async def start_handler(message: types.Message):
                         if info["player_invited"] is not None:
                             return await message.reply(text=data["emojio"] + " Вы уже переходили по реферальной ссылке..")
 
-                        register_date = datetime.datetime(day=info["player_register_day"], month=info["player_register_month"], year=info["player_register_year"],
+                        register_date = datetime(day=info["player_register_day"], month=info["player_register_month"], year=info["player_register_year"],
                         hour=info["player_register_hour"], minute=info["player_register_minute"])
 
                         date_now = datetime.now(tz)
