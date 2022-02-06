@@ -6,5 +6,5 @@ from . import startgame
 from . import double
 from . import associations
 from . import messages
-from . import referal
 from . import profile
+from . import referal
