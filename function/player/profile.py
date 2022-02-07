@@ -23,7 +23,6 @@ async def profile_handler(message: types.Message):
 
         profile = f'{data["emojio"]} {message.from_user.full_name}, ваш профиль:\n\n'
         profile += f'📌 Ваш ID: *{data_user["player_uid"]}*\n'
-        profile += f'📒 Уровень: *{data_user["player_level"]}*\n\n'
         profile += f'💰 Баланс: *{data_user["player_balance"]} $*'
         if data_user["player_referal_balance"] != 0:
             profile += f'\n💸 Реф.Баланс: *{data_user["player_referal_balance"]} $*'
