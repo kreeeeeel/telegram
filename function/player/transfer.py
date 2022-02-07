@@ -45,7 +45,7 @@ async def transfer_handler(message: types.Message):
                 user = json.loads(file.read())
 
             if user["player_uid"] == transfer_id:
-                transfer_telegram_id = int(temp.replace("json", ""))
+                transfer_telegram_id = int(temp.replace(".json", ""))
                 break
 
         if not transfer_telegram_id:
