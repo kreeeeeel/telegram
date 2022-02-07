@@ -1,6 +1,6 @@
 from aiogram import executor
 from dispatcher import dp
-import function
+import handlers
 import os
 
 if __name__ == "__main__":

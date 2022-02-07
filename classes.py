@@ -107,8 +107,6 @@ class GetDataFromUser:
         data = {
             
             "player_uid": 10000+len(dirs),
-            "player_level": 1,
-            "player_exp": 0,
             "player_vip": False,
             "player_premium": False,
             "player_admin": True,
