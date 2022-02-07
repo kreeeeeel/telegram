@@ -18,19 +18,12 @@ async def transfer_handler(message: types.Message):
 
         arg = message.get_args()
 
-        if message.reply_to_message:
-            if not arg.isdigit():
-                return await message.reply(data["emojio"] + " Используйте: /transfer <Сумму>")
+        split = arg.split(" ")
+        if len(split) != 2 or not split[1].isdigit() or not split[0].isdigit():
+            return await message.reply(data["emojio"] + " Используйте: /transfer <ID пользователя> <Сумму>")
 
-            transfer_id = message.reply_to_message.from_user.id
-            transfer_money = int(arg)
-        else:
-            split = arg.split(" ")
-            if len(split) != 2 or not split[1].isdigit() or not split[0].isdigit():
-                return await message.reply(data["emojio"] + " Используйте: /transfer <ID пользователя> <Сумму>")
-
-            transfer_id = int(split[0])
-            transfer_money = int(split[1])
+        transfer_id = int(split[0])
+        transfer_money = int(split[1])
 
         data_user = GetDataFromUser.get_data_user(user_id=message.from_user.id)
 
