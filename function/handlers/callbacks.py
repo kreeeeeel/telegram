@@ -18,12 +18,13 @@ async def some_callback_handler(callback_query: types.CallbackQuery):
         code = callback_query.data
         if code == "Команды":
             caption = "*🔫 Игры:*\n"
-            caption += "_/associaton - Игра Ассоциации_\n"
+            caption += "_/association - Игра Ассоциации_\n"
             caption += "_/blackjack - Игра Блэк-Джек_\n"
             caption += "_/double - Игра Дабл_\n"
             caption += "_/mafia - Игра Мафия_\n"
             caption += "\n*📌 Остальные команды:*\n"
             caption += "_/profile - Личная статистика_\n"
+            caption += "_/transfer - Перевод средств_\n"
             caption += "_/referal - Реферальная система_\n"
             caption += "_/startgame - Запуск игры_\n"
 
