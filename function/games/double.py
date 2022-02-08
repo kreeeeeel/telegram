@@ -82,9 +82,6 @@ async def bet_handler(message: types.Message):
         if splited[0].lower() != "x2" and splited[0].lower() != "x3" and splited[0].lower() != "x5" and splited[0].lower() != "x50":
             return await message.reply(data["emojio"] + " *Дабл\nИспользуйте: /bet [позиция] [сумма]*")
 
-        if not splited[1].isdigit() and splited[1].lower() != "всё" or splited[1].lower() != "все" or splited[1].lower() != "all":
-            return await message.reply(data["emojio"] + " *Дабл\nИспользуйте: /bet [позиция] [сумма]*")
-
         position = splited[0].lower()
         if splited[1].isdigit():
             bet = int(splited[1])
