@@ -89,7 +89,7 @@ async def bet_handler(message: types.Message):
             bet = data_user["player_balance"]
 
         if bet < data["minimal_bet_double"]:
-            return await message.reply(f'💰 Минимальная ставка в Дабл *{data["minimal_bet_double"]}$*')
+            return await message.reply(f'💰 Минимальная ставка в Дабл *{data["minimal_bet_double"]:,d}$*')
 
         if data_user["player_balance"] < bet:
             return await message.reply(text="💰 У вас недостаточно средств..")
@@ -149,8 +149,7 @@ async def end_double(chat_id):
         count_player = 0
         count_win = 0
         ammount_money = 0
-
-        message = data["emojio"] + f' *Дабл\nПодсчёт окончен\nОбщий банк: {ammount_money} $*\n'
+        bets = ""
 
         for item in positons:
             dirs = os.listdir(os.getcwd() + "/data/chats/" + str(chat_id) + "/double/x" + str(item))
@@ -165,7 +164,7 @@ async def end_double(chat_id):
                 ammount_money += user["bet"]
 
                 if chat["value"] == "x" + str(item):
-                    message += "✅ "
+                    bets += "✅ "
 
                     data_user = GetDataFromUser.get_data_user(user_id)
                     data_user["player_balance"] += user["bet"] * item
@@ -175,11 +174,11 @@ async def end_double(chat_id):
                     count_win += 1
 
                 else:
-                    message += "❌ "
+                    bets += "❌ "
 
-                message += f'{( user["name"] , pin_user )[ chat["pin_user"] ]} - {user["bet"]} $ - X{item}\n'
+                bets += f'{( user["name"] , pin_user )[ chat["pin_user"] ]} - {user["bet"]:,d} $ - X{item}\n'
 
-        message += f'\n_Кол-во ставок: {count_player}\nВыигрышных: {count_win}_'
+        message = data["emojio"] + f' *Дабл\nПодсчёт окончен\nОбщий банк: {ammount_money:,d} $*\n' + bets + f'\n_Кол-во ставок: {count_player}\nВыигрышных: {count_win}_'
 
         GetDataFromChat.remove_game_from_chat(chat_id)
 

@@ -44,7 +44,7 @@ async def blackjack_handler(message: types.Message):
         #bet = message.text.split(" ")
         if bet is not None and bet.isdigit():
             if int( bet ) < data["minimal_bet_blackjack"]:
-                return await message.reply(f'💰 Минимальная ставка в Блэк-Джек *{data["minimal_bet_blackjack"]}$*')
+                return await message.reply(f'💰 Минимальная ставка в Блэк-Джек *{data["minimal_bet_blackjack"]:,d}$*')
 
             bet_game = int( bet )
 
@@ -65,7 +65,7 @@ async def blackjack_handler(message: types.Message):
         keyboard = types.InlineKeyboardMarkup(row_width=1)
         keyboard.add(*buttons)
 
-        value_message = await message.answer(text=data["emojio"] + f' Игра: *Блэк-Джек!\n💰 Ставка: {bet_game} $*\nДля регистрации нажмите:', reply_markup=keyboard)
+        value_message = await message.answer(text=data["emojio"] + f' Игра: *Блэк-Джек!\n💰 Ставка: {bet_game:,d} $*\nДля регистрации нажмите:', reply_markup=keyboard)
         massive_message = [{"message_id": value_message.message_id}]
 
         chat["action"] = "Black-Jack"
@@ -86,7 +86,7 @@ async def edit_blackjack_handler(chat_id):
         chat = GetDataFromChat.export_data_from_chat(chat=chat_id)
         dirs = os.listdir(os.getcwd() + "/data/chats/" + str(chat_id) + "/blackjack")
 
-        message = data["emojio"] + f' Игра: *Блэк-Джек!*\n💰 *Ставка: {chat["bet"]} $*\n\nУчастники:\n'
+        message = data["emojio"] + f' Игра: *Блэк-Джек!*\n💰 *Ставка: {chat["bet"]:,d} $*\n\nУчастники:\n'
         for temp in dirs:
             with open(os.getcwd() + "/data/chats/" + str(chat_id) + "/blackjack/" + temp, encoding="UTF-8") as file:
                 info = json.loads(file.read())
@@ -203,7 +203,7 @@ async def start_blackjack(chat_id):
             return await bot.send_message(chat_id=chat_id, text=data["emojio"] + " *Блэк-Джек*\nНедостаточно игроков для начала игры\nДеньги возвращены..", parse_mode="Markdown")
 
         await bot.send_message(chat_id=chat_id, text=data["emojio"] + " *Диллер*: начинает раздавать карты..", parse_mode="Markdown")
-        message = data["emojio"] + f' *Блэк-Джек*\n💰 *Ставка: {chat["bet"]} $*\n_Диллер раздал карты_\n\nКарты участников:\n'
+        message = data["emojio"] + f' *Блэк-Джек*\n💰 *Ставка: {chat["bet"]:,d} $*\n_Диллер раздал карты_\n\nКарты участников:\n'
 
         count = 1
         queue_message = ""
@@ -329,7 +329,7 @@ async def message_for_blackjack(chat_id, message_id=None, edit=False):
     try:
         chat = GetDataFromChat.export_data_from_chat(chat=chat_id)
         dirs = os.listdir(os.getcwd() + "/data/chats/" + str(chat_id) + "/blackjack")
-        message = data["emojio"] + f' *Блэк-Джек*\n💰 *Ставка: {chat["bet"]} $*\n_Диллер раздал карты_\n\nКарты участников:\n'
+        message = data["emojio"] + f' *Блэк-Джек*\n💰 *Ставка: {chat["bet"]:,d} $*\n_Диллер раздал карты_\n\nКарты участников:\n'
 
         for item in dirs:
 
@@ -401,7 +401,7 @@ async def end_blackjack(chat_id):
     try:
         chat = GetDataFromChat.export_data_from_chat(chat=chat_id)
         dirs = os.listdir(os.getcwd() + "/data/chats/" + str(chat_id) + "/blackjack")
-        message = data["emojio"] + f' *Блэк-Джек*\n💰 *Ставка: {chat["bet"]} $\nИгра окончена!*\n\n_Диллер раскрывал свои карты_\n\nКарты участников:\n'
+        message = data["emojio"] + f' *Блэк-Джек*\n💰 *Ставка: {chat["bet"]:,d} $\nИгра окончена!*\n\n_Диллер раскрывал свои карты_\n\nКарты участников:\n'
 
         card = [{"card": random.choice(cards)}, {"card": random.choice(cards)}]
         value_diller = value_cards(card)

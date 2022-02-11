@@ -649,7 +649,7 @@ async def end_mafia(chat_id, human_win=False):
             message += f'{( user["name"] , pin_user )[ chat["pin_user"] ]}'
             if user["alive"]:
 
-                message += f' +{data["winner_mafia"]} 💰'
+                message += f' +{data["winner_mafia"]:,d} 💰'
                 profile["player_game"] += data["winner_mafia"]
                 GetDataFromUser.give_referal_money(user_id=profile["player_invited"], ammount=data["winner_mafia"])
 
