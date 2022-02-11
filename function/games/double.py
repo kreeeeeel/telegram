@@ -178,7 +178,7 @@ async def end_double(chat_id):
 
                 bets += f'{( user["name"] , pin_user )[ chat["pin_user"] ]} - {user["bet"]:,d} $ - X{item}\n'
 
-        message = data["emojio"] + f' *Дабл\nПодсчёт окончен\nОбщий банк: {ammount_money:,d} $*\n' + bets + f'\n_Кол-во ставок: {count_player}\nВыигрышных: {count_win}_'
+        message = data["emojio"] + f' *Дабл\nПодсчёт окончен\nОбщий банк: {ammount_money:,d} $*\n\n' + bets + f'\n_Кол-во ставок: {count_player}\nВыигрышных: {count_win}_'
 
         GetDataFromChat.remove_game_from_chat(chat_id)
 
