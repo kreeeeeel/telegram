@@ -34,7 +34,7 @@ async def double_handler(message: types.Message):
         if factor == 100:
             multiplier = "x50"
         
-        if factor > 0 and factor <= 10:
+        if factor >= 0 and factor <= 10:
             multiplier = "x5"
 
         if factor > 10 and factor <= 50:
