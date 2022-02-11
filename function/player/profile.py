@@ -23,9 +23,9 @@ async def profile_handler(message: types.Message):
 
         profile = f'{data["emojio"]} {message.from_user.full_name}, ваш профиль:\n\n'
         profile += f'📌 Ваш ID: *{data_user["player_uid"]}*\n'
-        profile += f'💰 Баланс: *{(data_user["player_balance"]:,d).replace(',','.')} $*'
+        profile += f'💰 Баланс: *{data_user["player_balance"]:,d} $*'
         if data_user["player_referal_balance"] != 0:
-            profile += f'\n💸 Реф.Баланс: *{data_user["player_referal_balance"]:n} $*'
+            profile += f'\n💸 Реф.Баланс: *{data_user["player_referal_balance"]:,d} $*'
 
         return await message.reply(text=profile)
     except Exception as e:
