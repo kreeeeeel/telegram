@@ -55,10 +55,10 @@ async def wrapping_handler(message: types.Message):
 
         if message.from_user.id != user:
             player = await bot.get_chat(chat_id=user)
-            await message.answer(text=data["emojio"] + f' Вы увеличили баланс [{player.full_name}](tg://user?id={user}) на *{value} $*')
-            return await bot.send_message(chat_id=user, text=data["emojio"] + f" [{message.from_user.full_name}](tg://user?id={message.from_user.id}) увеличил ваш баланс на *{value} $*")
+            await message.answer(text=data["emojio"] + f' Вы увеличили баланс [{player.full_name}](tg://user?id={user}) на *{value:,d} $*')
+            return await bot.send_message(chat_id=user, text=data["emojio"] + f" [{message.from_user.full_name}](tg://user?id={message.from_user.id}) увеличил ваш баланс на *{value:,d} $*")
 
-        return await message.reply(text=data["emojio"] + f' Ваш баланс увеличен на *{value} $*')
+        return await message.reply(text=data["emojio"] + f' Ваш баланс увеличен на *{value:,d} $*')
 
     except Exception as e:
         print(repr(e))
