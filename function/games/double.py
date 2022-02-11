@@ -162,6 +162,7 @@ async def end_double(chat_id):
                 user_id = int(temp.replace(".json", ""))
                 pin_user = f'[{user["name"]}](tg://user?id={user_id})'
                 ammount_money += user["bet"]
+                count_player += 1
 
                 if chat["value"] == "x" + str(item):
                     bets += "✅ "
