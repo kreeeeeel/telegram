@@ -57,8 +57,8 @@ async def transfer_handler(message: types.Message):
         GetDataFromUser.set_data_user(user_id=message.from_user.id, data=data_user)
 
         info = await bot.get_chat(chat_id=transfer_telegram_id)
-        await message.answer(data["emojio"] + f" Вы перевели [{info.full_name}](tg://user?id={transfer_telegram_id}) *{transfer_money} $*\nВаш баланс: *{data_user['player_balance']} $*")
-        return await bot.send_message(chat_id=transfer_telegram_id, text=data["emojio"] + f' Вам поступил перевод *{transfer_money} $* от [{message.from_user.full_name}](tg://user?id={message.from_user.id})')
+        await message.answer(data["emojio"] + f" Вы перевели [{info.full_name}](tg://user?id={transfer_telegram_id}) *{transfer_money:,d} $*\nВаш баланс: *{data_user['player_balance']:,d} $*")
+        return await bot.send_message(chat_id=transfer_telegram_id, text=data["emojio"] + f' Вам поступил перевод *{transfer_money:,d} $* от [{message.from_user.full_name}](tg://user?id={message.from_user.id})')
 
     except Exception as e:
         print(repr(e))

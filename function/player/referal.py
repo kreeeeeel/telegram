@@ -36,13 +36,13 @@ async def referal_handler(message: types.Message):
                         return await message.reply(text=data["emojio"] + " *У вас недостаточно реферальных средств..*")
 
                 if data["minimal_take_referal"] > money:
-                    return await message.reply(text=data["emojio"] + f' Минимальная сумма снятия *{data["minimal_take_referal"]} $*..')
+                    return await message.reply(text=data["emojio"] + f' Минимальная сумма снятия *{data["minimal_take_referal"]:,d} $*..')
 
                 user["player_referal_balance"] -= money
                 user["player_balance"] += money
 
                 GetDataFromUser.set_data_user(user_id=message.from_user.id, data=user)
-                return await message.reply(text=data["emojio"] + f' Вы сняли со счёта *{money} $*\n💸 Ваш баланс: *{user["player_balance"]} $*')
+                return await message.reply(text=data["emojio"] + f' Вы сняли со счёта *{money:,d} $*\n💸 Ваш баланс: *{user["player_balance"]:,d} $*')
 
         caption, keyboard = get_message_referal(message.from_user.id)
 
