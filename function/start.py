@@ -96,7 +96,7 @@ async def start_handler(message: types.Message):
         keyboard = types.InlineKeyboardMarkup(row_width=1)
         keyboard.add(*buttons)
 
-        return await message.answer(data["emojio"] + f" Приветствую вас!\nМеня зовут - {data['name_ru']}", reply_markup=keyboard)
+        return await message.answer(data["emojio"] + f" Приветствую вас!\nМеня зовут - {data['name_rus']}", reply_markup=keyboard)
             
 
     except Exception as e:
