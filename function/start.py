@@ -32,7 +32,7 @@ async def start_handler(message: types.Message):
                 keyboard = types.InlineKeyboardMarkup(row_width=1)
                 keyboard.add(*buttons)
 
-                return message.reply(text=caption, reply_markup=keyboard)
+                return await message.reply(text=caption, reply_markup=keyboard)
 
         value = message.get_args()
         if message.from_user.id == message.chat.id:
