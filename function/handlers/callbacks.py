@@ -23,7 +23,7 @@ async def some_callback_handler(callback_query: types.CallbackQuery):
         code = callback_query.data
         if code == "Команды":
             
-            caption = '*⚙ Настройка беседы:*'
+            caption = '*⚙ Настройка беседы:*\n'
             caption += "_/settings - Настройки_\n"
             caption += "\n*🔫 Игры для бесед:*\n"
             caption += "_/association - Игра Ассоциации_\n"
