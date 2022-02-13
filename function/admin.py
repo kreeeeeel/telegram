@@ -1,6 +1,7 @@
 import os
 import json
 import time
+import logging
 
 from aiogram import types
 from dispatcher import dp, bot
@@ -61,7 +62,7 @@ async def wrapping_handler(message: types.Message):
         return await message.reply(text=data["emojio"] + f' Ваш баланс увеличен на *{value:,d} $*')
 
     except Exception as e:
-        print(repr(e))
+        logging.error(e, exc_info=True)
 
 @dp.message_handler(commands=['setadmin'])
 async def setadmin_handler(message: types.Message):
@@ -78,4 +79,4 @@ async def setadmin_handler(message: types.Message):
         await message.reply(data["emojio"] + f" Права доступа [{message.reply_to_message.from_user.full_name}](tg://user?id={message.reply_to_message.from_user.id}) выданы.")
 
     except Exception as e:
-        print(repr(e))
+        logging.error(e, exc_info=True)

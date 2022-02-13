@@ -1,10 +1,12 @@
 import json
 import os
+import logging
 
 from aiogram import types
 from dispatcher import dp, bot
 from function.games import mafia
 from function.games import blackjack
+from function.games import crocodile
 from classes import GetDataFromChat, GetDataFromUser
 
 config = open(os.getcwd() + "/config.json", encoding="UTF-8")
@@ -14,6 +16,24 @@ config.close()
 @dp.message_handler(commands=['start'])
 async def start_handler(message: types.Message):
     try:
+        if message.from_user.id != message.chat.id:
+            if not GetDataFromChat.is_created_chat(message.chat.id):
+                GetDataFromChat.created_data_chat(message.chat.id)
+
+            chat = GetDataFromChat.export_data_from_chat(chat=message.chat.id)
+            if not chat["working"]:
+                caption = data["emojio"] + f" Приветствую вас, моё имя *{data['name_rus']}*\n"
+                caption += "Я вроде как считаюсь игровый ботом\n"
+                caption += 'Для запуск функционала бота требуются:'
+                caption += '📌 _Права администратора_\n\n'
+                caption += 'После выдачи прав, нажмите кнопку *Проверить*'
+
+                buttons  = [types.InlineKeyboardButton(text='Проверить', callback_data="Проверить")] 
+                keyboard = types.InlineKeyboardMarkup(row_width=1)
+                keyboard.add(*buttons)
+
+                return message.reply(text=caption, reply_markup=keyboard)
+
         value = message.get_args()
         if message.from_user.id == message.chat.id:
 
@@ -59,11 +79,15 @@ async def start_handler(message: types.Message):
                     return
 
                 chat = GetDataFromChat.export_data_from_chat(chat=value)
+
                 if chat["action"] == "Mafia":
                     return await mafia.join_mafia_handler(message.from_user.id, value, message.from_user.full_name)
 
                 if chat["action"] == "Black-Jack":
                     return await blackjack.join_blackjack_handler(message.from_user.id, value, message.from_user.full_name)
+
+                if chat["action"] == "Crocodile":
+                    return await crocodile.join_crocodile_handler(message.from_user.id, value, message.from_user.full_name)
 
             if not GetDataFromUser.is_user_data(user_id=message.from_user.id):
                 GetDataFromUser.create_user_data(user_id=message.from_user.id)
@@ -72,8 +96,8 @@ async def start_handler(message: types.Message):
         keyboard = types.InlineKeyboardMarkup(row_width=1)
         keyboard.add(*buttons)
 
-        return await message.answer("Приветствую - я Ананасыч 🍍\nМногоспособный бот для веселья!", reply_markup=keyboard)
+        return await message.answer(data["emojio"] + f" Приветствую вас!\nМеня зовут - {data['name_ru']}", reply_markup=keyboard)
             
 
     except Exception as e:
-        print("Не удалось обработать команду: ", e)
+        logging.error(e, exc_info=True)
