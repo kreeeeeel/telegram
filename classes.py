@@ -42,8 +42,12 @@ class GetDataFromChat:
         if not os.path.isdir("data/chats/" + str(chat) + "/association"):
             os.mkdir("data/chats/" + str(chat) + "/association")
 
+        if not os.path.isdir("data/chats/" + str(chat) + "/crocodile"):
+            os.mkdir("data/chats/" + str(chat) + "/crocodile")
+
         # Created data
         data = {
+            "working": False,
             "pin_user": True,
             "anti_capslock": False,
             "anti_url": False,
@@ -87,6 +91,71 @@ class GetDataFromChat:
         with open("data/chats/" + str(chat) + "/settings.json", "+w", encoding="UTF-8") as file:
             json.dump(data, file, ensure_ascii=False, indent=4)
 
+    def remove_bot_chat(chat_id):
+        with open("data/chats/" + str(chat_id) + "/settings.json", encoding="UTF-8") as file:
+            chat = json.loads(file.read())
+
+        chat["working"] = False
+        chat["action"] = None
+        chat["bet"] = None
+        chat["value"] = None
+        chat["type"] = None
+        chat["message"] = None
+        chat["hash"] = None
+        chat["time"] = None
+        chat["queue"] = None
+
+        with open("data/chats/" + str(chat_id) + "/settings.json", "+w", encoding="UTF-8") as file:
+            json.dump(chat, file, ensure_ascii=False, indent=4)
+
+        dirs = os.listdir(os.getcwd() + "/data/chats/" + str(chat_id) + "/association")
+        for temp in dirs:
+            os.remove(os.getcwd() + "/data/chats/" + str(chat_id) + "/association/" + temp)
+
+        dirs = os.listdir(os.getcwd() + "/data/chats/" + str(chat_id) + "/blackjack")
+        for temp in dirs:
+            os.remove(os.getcwd() + "/data/chats/" + str(chat_id) + "/blackjack/" + temp)
+
+            profile = GetDataFromUser.get_data_user(int(temp.replace(".json", "")))
+            profile["player_game"] = None
+            profile["player_balance"] += chat["bet"]
+            GetDataFromUser.set_data_user(int(temp.replace(".json", "")), profile)
+
+        dirs = os.listdir(os.getcwd() + "/data/chats/" + str(chat_id) + "/crocodile")
+        for temp in dirs:
+            os.remove(os.getcwd() + "/data/chats/" + str(chat_id) + "/crocodile/" + temp)
+
+            profile = GetDataFromUser.get_data_user(int(temp.replace(".json", "")))
+            profile["player_game"] = None
+            GetDataFromUser.set_data_user(int(temp.replace(".json", "")), profile)
+        
+        positons = [2, 3, 5, 50]
+
+        for item in positons:
+            dirs = os.listdir(os.getcwd() + "/data/chats/" + str(chat_id) + "/double/x" + str(item))
+            for temp in dirs:
+                with open(os.getcwd() + "/data/chats/" + str(chat_id) + "/double/x" + str(item) + "/" + temp, encoding="UTF-8") as file:
+                    user = json.loads(file.read())
+
+                os.remove(os.getcwd() + "/data/chats/" + str(chat_id) + "/double/x" + str(item) + "/" + temp)
+
+                user_id = int(temp.replace(".json", ""))
+                data_user = GetDataFromUser.get_data_user(user_id)
+                data_user["player_balance"] += user["bet"] * item
+
+                GetDataFromUser.set_data_user(user_id, data_user)
+
+        dirs = os.listdir(os.getcwd() + "/data/chats/" + str(chat_id) + "/mafia")
+
+        for temp in dirs:
+            os.remove(os.getcwd() + "/data/chats/" + str(chat_id) + "/mafia/" + temp)
+
+            profile = GetDataFromUser.get_data_user(int(temp.replace(".json", "")))
+            profile["player_game"] = None
+            GetDataFromUser.set_data_user(int(temp.replace(".json", "")), profile)
+
+
+
 class GetDataFromUser:
 
     def is_user_data(user_id):
@@ -107,12 +176,8 @@ class GetDataFromUser:
         data = {
             
             "player_uid": 10000+len(dirs),
-            "player_vip": False,
-            "player_premium": False,
             "player_admin": True,
             "player_balance": cfg["start_money"]+Money,
-            "player_shield_mafia": 0,
-            "player_fake_docs": 0,
             "player_game": None,
             "player_referal_balance": 0,
             "player_referal_lvl": 1,
