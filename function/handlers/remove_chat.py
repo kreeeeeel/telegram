@@ -5,7 +5,7 @@ from dispatcher import dp, bot
 from classes import GetDataFromChat
 
 @dp.message_handler(content_types=["left_chat_member"])
-async def new_chat_handler(message: types.Message):
+async def left_chat_handler(message: types.Message):
     try:
         if message.left_chat_member.id != bot.id:
             return 
