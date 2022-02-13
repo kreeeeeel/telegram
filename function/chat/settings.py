@@ -33,9 +33,9 @@ def get_settings(chat_id, full_name):
     chat = GetDataFromChat.export_data_from_chat(chat=chat_id)
 
     caption = data["emojio"] + f" Настройки беседы: {full_name}\n\n"
-    caption += f'Упоминание игроков: {( "Выключено ❌" , "Включено ✔" )[ chat["pin_user"] ]}'
-    caption += f'Анти КАПС: {( "Выключено ❌" , "Включено ✔" )[ chat["anti_capslock"] ]}'
-    caption += f'Анти URL: {( "Выключено ❌" , "Включено ✔" )[ chat["anti_url"] ]}'
+    caption += f'Упоминание игроков: {( "Выключено ❌" , "Включено ✔" )[ chat["pin_user"] ]}\n'
+    caption += f'Анти КАПС: {( "Выключено ❌" , "Включено ✔" )[ chat["anti_capslock"] ]}\n'
+    caption += f'Анти URL: {( "Выключено ❌" , "Включено ✔" )[ chat["anti_url"] ]}\n'
 
     buttons  = [types.InlineKeyboardButton(text=f'Упоминание: {( "Включить" , "Выключить" )[ chat["pin_user"] ]}', callback_data="Упоминание"),
     types.InlineKeyboardButton(text=f'Анти КАПС: {( "Включить" , "Выключить" )[ chat["anti_capslock"] ]}', callback_data="Анти-КАПС"),
