@@ -1,8 +1,7 @@
-from ast import parse
 import asyncio
 import json
 import os
-import queue
+import logging
 import random
 
 from aiogram import types
@@ -35,6 +34,9 @@ async def blackjack_handler(message: types.Message):
             GetDataFromChat.created_data_chat(message.chat.id)
 
         chat = GetDataFromChat.export_data_from_chat(chat=message.chat.id)
+        if not chat["working"]:
+            return 
+            
         if chat["action"] is not None:
             return
 
@@ -79,7 +81,7 @@ async def blackjack_handler(message: types.Message):
         return await countdown_blackjack(message.chat.id)
 
     except Exception as e:
-        print("Command blackjack: ", e)
+        logging.error(e, exc_info=True)
 
 async def edit_blackjack_handler(chat_id):
     try:
@@ -104,7 +106,7 @@ async def edit_blackjack_handler(chat_id):
         return await bot.edit_message_text(text=message, chat_id=chat_id, message_id=chat["message"][0]["message_id"], reply_markup=keyboard)
 
     except Exception as e:
-        print("Edit message blackjack: ", e)
+        logging.error(e, exc_info=True)
 
 
 async def join_blackjack_handler(user_id, chat_id, full_name):
@@ -139,7 +141,7 @@ async def join_blackjack_handler(user_id, chat_id, full_name):
             return await bot.send_message(chat_id=user_id, text=data["emojio"] + f' Вы присоединились к игре в [{chat_value.full_name}]({chat_value.invite_link})')
     
     except Exception as e:
-        print("Joined BlackJack:" , e)
+        logging.error(e, exc_info=True)
 
 async def countdown_blackjack(chat_id, forcibly=False):
     try:
@@ -175,7 +177,7 @@ async def countdown_blackjack(chat_id, forcibly=False):
             await asyncio.sleep(5)
             return await countdown_blackjack(chat_id=chat_id)
     except Exception as e:
-        print("Countdown BlackJack:" , e)
+        logging.error(e, exc_info=True)
 
 async def start_blackjack(chat_id):
     try:
@@ -251,7 +253,7 @@ async def start_blackjack(chat_id):
         GetDataFromChat.import_data_from_chat(chat_id, chat)
             
     except Exception as e:
-        print("Start BlackJack:" , e)
+        logging.error(e, exc_info=True)
 
 async def buttons_blackjack(from_id, message_id, action, chat_id, hash):
     try:
@@ -323,7 +325,7 @@ async def buttons_blackjack(from_id, message_id, action, chat_id, hash):
                 return await end_blackjack(chat_id)
 
     except Exception as e:
-        print("Button blackjack:", e)
+        logging.error(e, exc_info=True)
 
 async def message_for_blackjack(chat_id, message_id=None, edit=False):
     try:
@@ -367,8 +369,8 @@ async def message_for_blackjack(chat_id, message_id=None, edit=False):
         chat["message"] = value.message_id
         GetDataFromChat.import_data_from_chat(chat=chat_id, data=chat)
 
-    except Exception as E:
-        print("Message for blackjack", E)
+    except Exception as e:
+        logging.error(e, exc_info=True)
 
 async def skipped_players(chat_id):
     try:
@@ -395,7 +397,7 @@ async def skipped_players(chat_id):
         return await message_for_blackjack(chat_id=chat_id)
 
     except Exception as e:
-        print("Skipped player: ", e)
+        logging.error(e, exc_info=True)
 
 async def end_blackjack(chat_id):
     try:
@@ -443,8 +445,8 @@ async def end_blackjack(chat_id):
         await bot.send_message(text=message, chat_id=chat_id)
         return GetDataFromChat.remove_game_from_chat(chat_id)
 
-    except Exception as E:
-        print("end for blackjack", E)
+    except Exception as e:
+        logging.error(e, exc_info=True)
 
 def value_cards(cards):
 

@@ -5,6 +5,8 @@ from . import mafia
 from function import admin
 from . import blackjack
 from . import double
+from . import crocodile
+import logging
 
 from dispatcher import dp, bot
 from classes import GetDataFromChat
@@ -33,5 +35,8 @@ async def start_handler(message: types.Message):
             if chat["action"] == "Double":
                 return await double.countdown_double(chat_id=message.chat.id, forcibly=True)
 
+            if chat["action"] == "Crocodile" and chat["type"] == "Register":
+                return await crocodile.countdown_crocodile(chat_id=message.chat.id, forcibly=True)
+
     except Exception as e:
-        print("Не удалось обработать команду: ", e)
+        logging.error(e, exc_info=True)

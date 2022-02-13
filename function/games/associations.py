@@ -3,6 +3,7 @@ import json
 import os
 import random
 import requests
+import logging
 
 from aiogram import types
 from dispatcher import dp, bot
@@ -28,6 +29,9 @@ async def association_handlers(message: types.Message):
             GetDataFromChat.created_data_chat(message.chat.id)
 
         chat = GetDataFromChat.export_data_from_chat(chat=message.chat.id)
+        if not chat["working"]:
+            return 
+            
         if chat["action"] is not None:
             return
         
@@ -47,7 +51,7 @@ async def association_handlers(message: types.Message):
         return await countdown_association(chat_id=message.chat.id)
 
     except Exception as e:
-        print(repr(e))
+        logging.error(e, exc_info=True)
 
 def parse_words(chat_id, word):
     try:
@@ -63,7 +67,7 @@ def parse_words(chat_id, word):
                     parse.write(item.get_text() + ",")
 
     except Exception as e:
-        print(repr(e))
+        logging.error(e, exc_info=True)
 
 async def countdown_association(chat_id):
     try:
@@ -88,7 +92,7 @@ async def countdown_association(chat_id):
             return await countdown_association(chat_id)
 
     except Exception as e:
-        print(repr(e))
+        logging.error(e, exc_info=True)
 
 async def checking_association(chat_id, from_user, full_name, text, message_id):
     try:
@@ -126,7 +130,7 @@ async def checking_association(chat_id, from_user, full_name, text, message_id):
             await bot.send_message(chat_id=chat_id, reply_to_message_id=message_id, text=data["emojio"] + f' *Ассоциации*\nСлово *{text}* засчитано!\n⚡ *+{score} {ending(score)}*')
 
     except Exception as e:
-        print(repr(e))
+        logging.error(e, exc_info=True)
     
 async def end_association(chat_id):
     try:
@@ -155,7 +159,7 @@ async def end_association(chat_id):
         await bot.send_message(chat_id=chat_id, text=message)
         GetDataFromChat.remove_game_from_chat(chat_id)
     except Exception as e:
-        print(repr(e))
+        logging.error(e, exc_info=True)
 
 def ending(number):
     if (number % 100) // 10 != 1 and number % 10 == 1 :

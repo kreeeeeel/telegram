@@ -2,6 +2,7 @@ import asyncio
 import json
 import os
 import random
+import logging
 
 from aiogram import types
 from dispatcher import dp, bot
@@ -26,6 +27,9 @@ async def mafia_handler(message: types.Message):
             GetDataFromChat.created_data_chat(message.chat.id)
 
         chat = GetDataFromChat.export_data_from_chat(chat=message.chat.id)
+        if not chat["working"]:
+            return 
+            
         if chat["action"] is not None:
             return
 
@@ -49,7 +53,7 @@ async def mafia_handler(message: types.Message):
         return await countdown_mafia(message.chat.id)
 
     except Exception as e:
-        print("Command mafia: ", e)
+        logging.error(e, exc_info=True)
 
 async def edit_mafia_handler(chat_id):
     try:
@@ -74,7 +78,7 @@ async def edit_mafia_handler(chat_id):
         return await bot.edit_message_text(text=message, chat_id=chat_id, message_id=chat["message"][0]["message_id"], reply_markup=keyboard)
 
     except Exception as e:
-        print("Edi message mafia: ", e)
+        logging.error(e, exc_info=True)
 
 
 async def join_mafia_handler(user_id, chat_id, full_name):
@@ -108,7 +112,7 @@ async def join_mafia_handler(user_id, chat_id, full_name):
             return await bot.send_message(chat_id=user_id, text=data["emojio"] + f' Вы присоединились к игре в [{chat_value.full_name}]({chat_value.invite_link})')
     
     except Exception as e:
-        print("Joined Mafia:" , e)
+        logging.error(e, exc_info=True)
 
 async def countdown_mafia(chat_id, forcibly=False):
     try:
@@ -155,7 +159,7 @@ async def countdown_mafia(chat_id, forcibly=False):
             await asyncio.sleep(5)
             return await countdown_mafia(chat_id=chat_id)
     except Exception as e:
-        print("Countdown Mafia:" , e)
+        logging.error(e, exc_info=True)
 
 async def distribution_roles(chat_id):
     try:
@@ -325,7 +329,7 @@ async def distribution_roles(chat_id):
         await setup_night(chat_id, 1)
 
     except Exception as e:
-        print("Distribution Roles:" , e)
+        logging.error(e, exc_info=True)
 
 async def setup_night(chat_id, day):
     try:
@@ -383,7 +387,7 @@ async def setup_night(chat_id, day):
         parse_mode="Markdown")
             
     except Exception as e:
-        print("Setup Night:" , e) 
+        logging.error(e, exc_info=True) 
 
 async def setup_morning(chat_id, day):  
     try:
@@ -500,7 +504,7 @@ async def setup_morning(chat_id, day):
         parse_mode="Markdown")
 
     except Exception as e:
-        print("Setup Morning:" , e)
+        logging.error(e, exc_info=True)
 
 async def setup_day(chat_id, day):
     try:
@@ -534,7 +538,7 @@ async def setup_day(chat_id, day):
 
         await bot.send_message(chat_id=chat_id, text=data["emojio"] + " *Началось собрание жителей города*\n\n_На собрании вам нужно определиться, кого повесить за убийства в городе_", parse_mode="Markdown")
     except Exception as e:
-        print("Setup Day:" , e)
+        logging.error(e, exc_info=True)
 
 async def count_votes(chat_id, day):
     try:
@@ -583,7 +587,7 @@ async def count_votes(chat_id, day):
         await bot.send_message(chat_id=chat_id, text=message, parse_mode="Markdown")
 
     except Exception as e:
-        print("Setup Voted:" , e)
+        logging.error(e, exc_info=True)
 
 async def checking_alive_user(chat_id):
     try:
@@ -611,7 +615,7 @@ async def checking_alive_user(chat_id):
                 await end_mafia(chat_id, True)
                 
     except Exception as e:
-        print("Setup Checking:" , e)
+        logging.error(e, exc_info=True)
 
 async def end_mafia(chat_id, human_win=False):
     try:
@@ -669,7 +673,7 @@ async def end_mafia(chat_id, human_win=False):
 
         await bot.send_message(chat_id=chat_id, text=message, parse_mode="Markdown")
     except Exception as e:
-        print("Setup Checking:" , e)
+        logging.error(e, exc_info=True)
 
 async def choise_user(from_id, message_id, chat_id, user_choise, value, day, hash):
     try:
@@ -728,4 +732,4 @@ async def choise_user(from_id, message_id, chat_id, user_choise, value, day, has
         return await bot.edit_message_text(text=message, chat_id=from_id, message_id=message_id)
 
     except Exception as e:
-        print("choise_user:" , e)
+        logging.error(e, exc_info=True)
