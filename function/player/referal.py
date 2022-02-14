@@ -30,14 +30,14 @@ async def referal_handler(message: types.Message):
                 if user["player_referal_lvl"] >= data["maximum_level_referal"]:
                     return await message.reply(text=data["emojio"] + " *У вас максимальный уровень..*")
 
-                if user["player_balance"] < data["referal_lvl_up_cost"] * user["player_referal_lvl"]:
+                if user["player_balance"] < data["referal_lvl_up_cost"] * (user["player_referal_lvl"] + 1):
                     return await message.reply(text=data["emojio"] + " *У вас недостаточно средств..*")
 
                 level = user["player_referal_lvl"] 
                 caption = data["emojio"] + " *Реферальная система*\n\n"
                 caption += f'💡 Вы собираетесь повысить уровень до *{level + 1}*\n'
-                caption += f'💸 Стоимость повышения: *{data["referal_lvl_up_cost"] * level:,d}* $\n'
-                caption += 'Повысить уровень?'
+                caption += f'💸 Стоимость повышения: *{data["referal_lvl_up_cost"] * (level + 1):,d}* $\n\n'
+                caption += '*Повысить уровень?*'
 
                 buttons  = [types.InlineKeyboardButton(text='Повысить ⏏', callback_data="Повысить"), types.InlineKeyboardButton(text='Отказаться ❌', callback_data="Отказ")] 
                 keyboard = types.InlineKeyboardMarkup(row_width=1)
