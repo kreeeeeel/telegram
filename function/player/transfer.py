@@ -1,10 +1,11 @@
 import json
 import os
+import logging
 
 from aiogram import types
 from dispatcher import dp, bot
 
-from classes import GetDataFromUser
+from classes import GetDataFromUser, GetDataFromChat
 
 config = open(os.getcwd() + "/config.json", encoding="UTF-8")
 data = json.loads(config.read())
@@ -13,6 +14,11 @@ config.close()
 @dp.message_handler(commands=['transfer'])
 async def transfer_handler(message: types.Message):
     try:
+        if message.chat.id != message.from_user.id:
+            chat = GetDataFromChat.export_data_from_chat(chat=message.chat.id)
+            if chat["working"] is False:
+                return
+
         if not GetDataFromUser.is_user_data(user_id=message.from_user.id):
             return 
 
@@ -61,4 +67,4 @@ async def transfer_handler(message: types.Message):
         return await bot.send_message(chat_id=transfer_telegram_id, text=data["emojio"] + f' Вам поступил перевод *{transfer_money:,d} $* от [{message.from_user.full_name}](tg://user?id={message.from_user.id})')
 
     except Exception as e:
-        print(repr(e))
+        logging.error(e, exc_info=True)
