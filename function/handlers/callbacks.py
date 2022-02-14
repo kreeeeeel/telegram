@@ -51,7 +51,7 @@ async def some_callback_handler(callback_query: types.CallbackQuery):
             if user["player_referal_lvl"] >= data["maximum_level_referal"]:
                 return await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, text=data["emojio"] + " *У вас максимальный уровень..*")
 
-            if user["player_balance"] < data["referal_lvl_up_cost"] * user["player_referal_lvl"]:
+            if user["player_balance"] < data["referal_lvl_up_cost"] * (user["player_referal_lvl"] + 1):
                 return await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, text=data["emojio"] + " *У вас недостаточно средств..*")
 
             user["player_referal_lvl"] += 1
