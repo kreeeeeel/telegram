@@ -1,10 +1,11 @@
 import json
 import os
+import logging
 
 from aiogram import types
 from dispatcher import dp, bot
 
-from classes import GetDataFromUser
+from classes import GetDataFromUser, GetDataFromChat
 
 config = open(os.getcwd() + "/config.json", encoding="UTF-8")
 data = json.loads(config.read())
@@ -13,6 +14,11 @@ config.close()
 @dp.message_handler(commands=['referal'])
 async def referal_handler(message: types.Message):
     try:
+        if message.chat.id != message.from_user.id:
+            chat = GetDataFromChat.export_data_from_chat(chat=message.chat.id)
+            if chat["working"] is False:
+                return
+
         if not GetDataFromUser.is_user_data(user_id=message.from_user.id):
             return await message.answer(text=data["emojio"] + " *Реферальная система*\nЧтобы пользоваться вам нужно начать диалог с ботом\nИли же перейти по ссылке от своего друга.")
 
@@ -48,7 +54,7 @@ async def referal_handler(message: types.Message):
 
         await message.reply(text=caption, reply_markup=keyboard, parse_mode="Markdown")
     except Exception as e:
-        print(repr(e))
+        logging.error(e, exc_info=True)
 
 def get_message_referal(user):
     data_user = GetDataFromUser.get_data_user(user_id=user)
