@@ -57,10 +57,11 @@ async def some_callback_handler(callback_query: types.CallbackQuery):
             user["player_referal_lvl"] += 1
             user["player_balance"] -= data["referal_lvl_up_cost"] * user["player_referal_lvl"]
 
+            level = user["player_referal_lvl"]
             caption = data["emojio"] + " *Реферальная система*\n\n"
-            caption += f'Вы повысили уровень до {user["player_referal_lvl"]}\n'
-            caption += f'Процент с реф.системы: {data["player_referal_lvl"]} %\n'
-            caption += f'Баланс: {data["player_balance"]} $'
+            caption += f'Вы повысили уровень до *{level}*\n'
+            caption += f'Процент с реф.системы: *{level} %*\n'
+            caption += f'Баланс: *{data["player_balance"]} $*'
 
             return await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, text=caption)
 
