@@ -61,7 +61,7 @@ async def some_callback_handler(callback_query: types.CallbackQuery):
             caption = data["emojio"] + " *Реферальная система*\n\n"
             caption += f'Вы повысили уровень до *{level}*\n'
             caption += f'Процент с реф.системы: *{level} %*\n'
-            caption += f'Баланс: *{data["player_balance"]} $*'
+            caption += f'Баланс: *{user["player_balance"]} $*'
 
             return await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, text=caption)
 
