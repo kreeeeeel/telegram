@@ -57,6 +57,8 @@ async def some_callback_handler(callback_query: types.CallbackQuery):
             user["player_referal_lvl"] += 1
             user["player_balance"] -= data["referal_lvl_up_cost"] * user["player_referal_lvl"]
 
+            GetDataFromUser.set_data_user(callback_query.from_user.id, user)
+
             level = user["player_referal_lvl"]
             caption = data["emojio"] + " *Реферальная система*\n\n"
             caption += f'Вы повысили уровень до *{level}*\n'
