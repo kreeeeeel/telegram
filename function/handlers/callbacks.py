@@ -11,7 +11,7 @@ from function.games import crocodile
 from function.player import referal
 from function.chat import settings
 from function import admin
-from classes import GetDataFromChat
+from classes import GetDataFromChat, GetDataFromUser
 
 config = open(os.getcwd() + "/config.json", encoding="UTF-8")
 data = json.loads(config.read())
@@ -36,6 +36,43 @@ async def some_callback_handler(callback_query: types.CallbackQuery):
             caption += "_/transfer - Перевод средств_\n"
             caption += "_/referal - Реферальная система_\n"
             caption += "_/startgame - Запуск игры_\n"
+
+            return await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, text=caption)
+
+        elif code == "Повысить":
+
+            if not callback_query.message.reply_to_message:
+                return await bot.delete_message(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id)
+
+            if callback_query.from_user.id != callback_query.message.reply_to_message.from_user.id:
+                return await bot.answer_callback_query(callback_query_id=callback_query.id, text=data["emojio"] + " Кнопка предназначана не для вас..", show_alert=True)
+
+            user = GetDataFromUser.get_data_user(user_id=callback_query.from_user.id)
+            if user["player_referal_lvl"] >= data["maximum_level_referal"]:
+                return await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, text=data["emojio"] + " *У вас максимальный уровень..*")
+
+            if user["player_balance"] < data["referal_lvl_up_cost"] * user["player_referal_lvl"]:
+                return await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, text=data["emojio"] + " *У вас недостаточно средств..*")
+
+            user["player_referal_lvl"] += 1
+            user["player_balance"] -= data["referal_lvl_up_cost"] * user["player_referal_lvl"]
+
+            caption = data["emojio"] + " *Реферальная система*\n\n"
+            caption += f'Вы повысили уровень до {user["player_referal_lvl"]}\n'
+            caption += f'Процент с реф.системы: {data["player_referal_lvl"]} %\n'
+            caption += f'Баланс: {data["player_balance"]} $'
+
+            return await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, text=caption)
+
+        elif code == "Отказ":
+
+            if not callback_query.message.reply_to_message:
+                return await bot.delete_message(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id)
+
+            if callback_query.from_user.id != callback_query.message.reply_to_message.from_user.id:
+                return await bot.answer_callback_query(callback_query_id=callback_query.id, text=data["emojio"] + " Кнопка предназначана не для вас..", show_alert=True)
+
+            caption = data["emojio"] + " *Реферальная система*\n\nУлучшение отменено.."
 
             return await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, text=caption)
 
