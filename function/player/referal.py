@@ -35,9 +35,8 @@ async def referal_handler(message: types.Message):
 
                 level = user["player_referal_lvl"] 
                 caption = data["emojio"] + " *Реферальная система*\n\n"
-                caption += f'Вы собираетесь повысить уровень до {level + 1}\n'
-                caption += f'Стоимость повышения: {data["referal_lvl_up_cost"] * level:,d} $\n'
-                caption += f'Процент с реф.системы будет увеличен до {level+1} %\n\n'
+                caption += f'Вы собираетесь повысить уровень до *{level + 1}*\n'
+                caption += f'Стоимость повышения: *{data["referal_lvl_up_cost"] * level:,d}* $\n'
                 caption += 'Повысить уровень?'
 
                 buttons  = [types.InlineKeyboardButton(text='Повысить ⏏', callback_data="Повысить"), types.InlineKeyboardButton(text='Отказаться ❌', callback_data="Отказ")] 
