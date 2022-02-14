@@ -33,10 +33,11 @@ async def referal_handler(message: types.Message):
                 if user["player_balance"] < data["referal_lvl_up_cost"] * user["player_referal_lvl"]:
                     return await message.reply(text=data["emojio"] + " *У вас недостаточно средств..*")
 
+                level = user["player_referal_lvl"] 
                 caption = data["emojio"] + " *Реферальная система*\n\n"
-                caption += f'Вы собираетесь повысить уровень до {user["player_referal_lvl"] + 1}\n'
-                caption += f'Стоимость повышения: {data["referal_lvl_up_cost"] * user["player_referal_lvl"]:,d} $\n'
-                caption += f'Процент с реф.системы будет увеличен до {data["player_referal_lvl"]+1} %\n\n'
+                caption += f'Вы собираетесь повысить уровень до {level + 1}\n'
+                caption += f'Стоимость повышения: {data["referal_lvl_up_cost"] * level:,d} $\n'
+                caption += f'Процент с реф.системы будет увеличен до {level+1} %\n\n'
                 caption += 'Повысить уровень?'
 
                 buttons  = [types.InlineKeyboardButton(text='Повысить ⏏', callback_data="Повысить"), types.InlineKeyboardButton(text='Отказаться ❌', callback_data="Отказ")] 
@@ -84,7 +85,7 @@ def get_message_referal(user):
     caption += f'❓ Как пригласить своего друга?\n❗ Пригласить своего друга можно по ссылке\n  После чего ваш друг перейдя по ссылке\n  Нажать на кнопку *CТАРТ*\n\n'
     caption += f'❓ Бонусы\n❗ При приглашении вашего друга, он сможет получить бонус\n  В зависимости от уровня вашей реферальной системы\n\n'
     caption += f'❓ Как снять реф.деньги?\n❗ После приглашения пользователя\nНа ваш счёт поступил бонус\nСнять: /referal снять\n\n'
-    caption += f'❓ Как повысить уровень?\n❗ Повышение уровня: /referal улучшить\n\n'
+    caption += f'❓ Как повысить уровень?\n❗ Повышение уровня:\n /referal улучшить\n\n'
         #caption += f'Ваша ссылка: https://t.me/{data["name"]}?start={from_user}'
 
     buttons = [types.InlineKeyboardButton(text='Мои рефералы', callback_data="Рефералы"), types.InlineKeyboardButton(text='Ссылка', callback_data="Ссылка")]
