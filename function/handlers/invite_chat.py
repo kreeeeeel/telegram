@@ -17,8 +17,8 @@ async def new_chat_handler(message: types.Message):
             if not GetDataFromChat.is_created_chat(message.chat.id):
                 GetDataFromChat.created_data_chat(message.chat.id)
                 
-            caption = data["emojio"] + f" Приветствую Вас!\nМое имя -  *{data['name_rus']}*\n"
-            caption += "_Я игровой бот и для запуска моей работы мне требуются права администратора :)_\n"
+            caption = data["emojio"] + f" Приветствую Вас!\nМое имя -  *{data['name_rus']}*\n\n"
+            caption += "_Я игровой бот и для запуска моей работы мне требуются права администратора :)_\n\n"
             caption += 'После выдачи прав, нажмите кнопку *Проверить*'
 
             buttons  = [types.InlineKeyboardButton(text='Проверить', callback_data="Проверить")] 
