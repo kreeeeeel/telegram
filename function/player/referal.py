@@ -25,6 +25,26 @@ async def referal_handler(message: types.Message):
         value = message.get_args()
 
         if value:
+            user = GetDataFromUser.get_data_user(user_id=message.from_user.id)
+            if value == "улучшить":
+                if user["player_referal_lvl"] >= data["maximum_level_referal"]:
+                    return await message.reply(text=data["emojio"] + " *У вас максимальный уровень..*")
+
+                if user["player_balance"] < data["referal_lvl_up_cost"] * user["player_referal_lvl"]:
+                    return await message.reply(text=data["emojio"] + " *У вас недостаточно средств..*")
+
+                caption = data["emojio"] + " *Реферальная система*\n\n"
+                caption += f'Вы собираетесь повысить уровень до {user["player_referal_lvl"] + 1}\n'
+                caption += f'Стоимость повышения: {data["referal_lvl_up_cost"] * user["player_referal_lvl"]:,d} $\n'
+                caption += f'Процент с реф.системы будет увеличен до {data["player_referal_lvl"]+1} %\n\n'
+                caption += 'Повысить уровень?'
+
+                buttons  = [types.InlineKeyboardButton(text='Повысить ⏏', callback_data="Повысить"), types.InlineKeyboardButton(text='Отказаться ❌', callback_data="Отказ")] 
+                keyboard = types.InlineKeyboardMarkup(row_width=1)
+                keyboard.add(*buttons)
+
+                return await message.reply(text=caption, reply_markup=keyboard)
+                
             splited = value.split(" ")
             if len(splited) != 0:
 
@@ -62,7 +82,9 @@ def get_message_referal(user):
     caption = data["emojio"] + f' *Реферальная система\n💰 Уровень: {data_user["player_referal_lvl"]}/{data["maximum_level_referal"]}*\n\n'
     caption += f'❓ Что такое Реферальная система\n❗ Реферальная система служит помощи игрокам\n  При приглашение своего друга по ссылке\n  Вы будете получать процент от ставок своего друга\n\n'
     caption += f'❓ Как пригласить своего друга?\n❗ Пригласить своего друга можно по ссылке\n  После чего ваш друг перейдя по ссылке\n  Нажать на кнопку *CТАРТ*\n\n'
-    caption += f'❓ Бонусы\n❗ При приглашении вашего друга, он сможет получить бонус\n  В зависимости от уровня вашей реферальной системы\n\n'
+    caption += f'❓ Бонусы\n❗ При приглашении вашего друга, он сможет получить бонус\n  В зависимости от уровня вашей реферальной системы\n'
+    caption += f'❓ Как снять реф.деньги?\n❗ После приглашения пользователя\nНа ваш счёт поступил бонус\nСнять: /referal снять\n'
+    caption += f'❓ Как повысить уровень?\n❗ Повышение уровня: /referal улучшить\n\n'
         #caption += f'Ваша ссылка: https://t.me/{data["name"]}?start={from_user}'
 
     buttons = [types.InlineKeyboardButton(text='Мои рефералы', callback_data="Рефералы"), types.InlineKeyboardButton(text='Ссылка', callback_data="Ссылка")]
