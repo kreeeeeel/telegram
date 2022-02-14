@@ -1,9 +1,10 @@
 import json
 import os
+import logging
 
 from aiogram import types
 from dispatcher import dp
-from classes import GetDataFromUser
+from classes import GetDataFromUser, GetDataFromChat
 
 config = open(os.getcwd() + "/config.json", encoding="UTF-8")
 data = json.loads(config.read())
@@ -12,6 +13,11 @@ config.close()
 @dp.message_handler(commands=['profile'])
 async def profile_handler(message: types.Message):
     try:
+        if message.chat.id != message.from_user.id:
+            chat = GetDataFromChat.export_data_from_chat(chat=message.chat.id)
+            if chat["working"] is False:
+                return
+
         value = GetDataFromUser.is_user_data(message.from_user.id)
         if message.chat.id == message.from_user.id and not value:
             GetDataFromUser.create_user_data(message.from_user.id)
@@ -29,4 +35,4 @@ async def profile_handler(message: types.Message):
 
         return await message.reply(text=profile)
     except Exception as e:
-        print(repr(e))
+        logging.error(e, exc_info=True)
