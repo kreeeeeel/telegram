@@ -165,7 +165,7 @@ async def start_game(chat_id, queue=None):
         dirs = os.listdir(os.getcwd() + "/data/chats/" + str(chat_id) + "/crocodile")
         members = len(dirs)
 
-        if members < 1:
+        if members < 3:
             for temp in dirs:
                 os.remove(os.getcwd() + "/data/chats/" + str(chat_id) + "/crocodile/" + temp)
 
@@ -221,7 +221,11 @@ async def delete_game(chat_id, remove=False):
         GetDataFromChat.remove_game_from_chat(chat_id)
         if not remove: 
             return await bot.send_message(chat_id=chat_id, text=data["emojio"] + " *Крокодил*\nИгра была завершена, так как *Ведущий* не придумал слово..")
-        return await bot.send_message(chat_id=chat_id, text=data["emojio"] + " *Крокодил*\nИгра была завершена.")
+        
+        user = GetDataFromUser.get_data_user(int(chat["queue"].replace(".json", "")))
+        user["player_balance"] += data["bonus_crocodile"]
+        GetDataFromUser.set_data_user(int(chat["queue"].replace(".json", "")), user)
+        return await bot.send_message(chat_id=chat_id, text=data["emojio"] + " *Крокодил*\nИгра была завершена\n\nНикто не угадал слово\n*Ведущий* получает бонус.")
     except Exception as e:
         logging.error(e, exc_info=True)
 
@@ -252,7 +256,11 @@ async def guess_the_word(chat_id, user_id, full_name, text, message_id):
 
         if chat["value"].lower() == text.lower():
             pin_user = f'[{full_name}](tg://user?id={user_id})'
-            message = data["emojio"] + f' *Крокодил*\n*{( full_name , pin_user )[ chat["pin_user"] ]} отгадал слово!*\n\n_Игра будет завершена через_ *30 секунд*\n_Продолжаем?_'
+            message = data["emojio"] + f' *Крокодил*\n*{( full_name , pin_user )[ chat["pin_user"] ]} отгадал слово и получает бонус!*\n\n_Игра будет завершена через_ *30 секунд*\n_Продолжаем?_'
+
+            user = GetDataFromUser.get_data_user(user_id)
+            user["player_balance"] += data["bonus_crocodile"]
+            GetDataFromUser.set_data_user(user_id, user)
 
             buttons  = [types.InlineKeyboardButton(text=f'Продолжить (0/{len(dirs)})', callback_data="Команды")] 
             keyboard = types.InlineKeyboardMarkup(row_width=1)
