@@ -80,3 +80,16 @@ async def setadmin_handler(message: types.Message):
 
     except Exception as e:
         logging.error(e, exc_info=True)
+
+@dp.message_handler(commands=['info'])
+async def info_handler(message: types.Message):
+    try:
+        if message.from_user.id != data["develop"]:
+            return
+
+        chats = os.listdir(os.getcwd() + "/data/chats")
+        users = os.listdir(os.getcwd() + "/data/users")
+        await message.reply(data["emojio"] + f" Бесед: *{len(chats)}*\nПользователей: *{len(users)}*")
+
+    except Exception as e:
+        logging.error(e, exc_info=True)
