@@ -15,6 +15,7 @@
     "minimal_bet_double": 10,
     "bonus_referal": 100,
     "minimal_take_referal": 10,
-    "maximum_level_referal": 5,
-    "referal_lvl_up_cost": 1000
+    "maximum_level_referal": 10,
+    "referal_lvl_up_cost": 1000,
+    "bonus_crocodile": 100
 }
