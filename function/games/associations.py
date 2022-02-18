@@ -9,6 +9,7 @@ from aiogram import types
 from dispatcher import dp, bot
 from classes import GetDataFromChat, GetDataFromUser
 from function import admin
+from datetime import datetime
 
 from bs4 import BeautifulSoup
 
@@ -19,6 +20,7 @@ config.close()
 @dp.message_handler(commands=['association'])
 async def association_handlers(message: types.Message):
     try:
+        start = datetime.now()
         if message.from_user.id == message.chat.id:
             return 
 
@@ -48,6 +50,7 @@ async def association_handlers(message: types.Message):
         
         await message.answer(text=data["emojio"] + f' *Ассоциации*\n\n_✏ Пишите ассоциации к слову в течении {data["time_association"]} секунд\n⚡ Зарабатывайте очки и выигрывайте_\n\nСлово для ассоциаций: *{chat["value"]}*')
         GetDataFromChat.import_data_from_chat(chat=message.chat.id, data=chat)
+        print(datetime.now() - start)
         return await countdown_association(chat_id=message.chat.id)
 
     except Exception as e:
