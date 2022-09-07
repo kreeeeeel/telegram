@@ -1,1 +1,1 @@
-start: python dispatcher.py
+start: python bot.py
