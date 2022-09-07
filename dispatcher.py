@@ -1,5 +1,4 @@
 import logging
-import function
 import os
 import json
 
@@ -15,4 +14,3 @@ logging.basicConfig(level=logging.INFO)
 # Dispatcher
 bot = Bot(token=data["token"], parse_mode="Markdown")
 dp = Dispatcher(bot)
-print ('okkkey') 
