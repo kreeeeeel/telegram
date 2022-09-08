@@ -272,7 +272,7 @@ async def distribution_roles(chat_id):
                 await bot.send_message(chat_id=int(temp.replace(".json", "")), text="🤵 Ваша роль: Мафия\nВы являетесь хозяином ночи, выбирайте кого убивать чтобы выиграть")
                 continue
 
-            if temp == police:
+            if temp in police_players:
 
                 data_mafia = {
                     "name": info["name"],
@@ -286,7 +286,7 @@ async def distribution_roles(chat_id):
                 await bot.send_message(chat_id=int(temp.replace(".json", "")), text="👮 Ваша роль: Коммисар\nВы порядок и правосудие!\nПроверяйте игроков, чтобы выяснить кто убийца..")
                 continue
 
-            if temp == medic:
+            if temp in medic_players:
 
                 data_mafia = {
                     "name": info["name"],
