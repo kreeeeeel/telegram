@@ -174,6 +174,7 @@ async def distribution_roles(chat_id):
         
         dirs = os.listdir(os.getcwd() + "/data/chats/" + str(chat_id) + "/mafia")
         players = list(dirs)
+        print(players)
         members = len(dirs)
 
         if members < 2:
