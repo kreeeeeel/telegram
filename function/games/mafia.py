@@ -174,7 +174,6 @@ async def distribution_roles(chat_id):
         
         dirs = os.listdir(os.getcwd() + "/data/chats/" + str(chat_id) + "/mafia")
         players = list(dirs)
-        print(players)
         members = len(dirs)
 
         if members < 2:
@@ -220,7 +219,7 @@ async def distribution_roles(chat_id):
             if mafia > 0:
 
                 mafia -= 1
-                player = players[random.randint(0, len(players))]
+                player = random.choice(list(dirs))
                 players.remove(player)
 
                 mafia_players.append(player)
