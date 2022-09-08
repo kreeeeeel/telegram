@@ -220,7 +220,7 @@ async def distribution_roles(chat_id):
             if mafia > 0:
 
                 mafia -= 1
-                player = players[random.randint(0, len(players)]
+                player = players[random.randint(0, len(players))]
                 players.remove(player)
 
                 mafia_players.append(player)
