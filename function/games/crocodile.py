@@ -165,7 +165,7 @@ async def start_game(chat_id, queue=None):
         dirs = os.listdir(os.getcwd() + "/data/chats/" + str(chat_id) + "/crocodile")
         members = len(dirs)
 
-        if members < 3:
+        if members < 2:
             for temp in dirs:
                 os.remove(os.getcwd() + "/data/chats/" + str(chat_id) + "/crocodile/" + temp)
 
