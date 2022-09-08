@@ -176,7 +176,7 @@ async def distribution_roles(chat_id):
         players = list(dirs)
         members = len(dirs)
 
-        if members < 3:
+        if members < 2:
             for temp in dirs:
                 os.remove(os.getcwd() + "/data/chats/" + str(chat_id) + "/mafia/" + temp)
 
@@ -189,11 +189,11 @@ async def distribution_roles(chat_id):
         
         mafia, police, medic, bomj = 0, 0, 0, 0
 
-        if members == 3:
+        if members > 2 and members <= 4:
 
             mafia = 1
 
-        elif members > 3 and members <= 6:
+        elif members > 4 and members <= 6:
 
             mafia = 1
             medic = 1
